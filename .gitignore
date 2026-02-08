@@ -1,0 +1,22 @@
+# Runtime data/output
+/data/
+/out/
+
+# Virtualenv
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+
+# Editor
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

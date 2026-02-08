@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HARDSTATS OGame • {{ universe_name }} • {{ player_name }} • {{ report_date }}</title>
+  <style>
+    :root {
+      --bg: #0b0d10;
+      --panel: rgba(255,255,255,0.06);
+      --panel2: rgba(255,255,255,0.10);
+      --text: #e8edf2;
+      --muted: rgba(232,237,242,0.72);
+      --line: rgba(255,255,255,0.12);
+      --accent: #6ee7ff;
+      --accent2: #a7ff83;
+      --bad: #ff6b6b;
+      --good: #34d399;
+      --shadow: 0 18px 60px rgba(0,0,0,0.55);
+      --radius: 16px;
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+    }
+
+    [data-theme="clean"] {
+      --bg: #f7f8fb;
+      --panel: #ffffff;
+      --panel2: #f0f2f7;
+      --text: #141824;
+      --muted: rgba(20,24,36,0.65);
+      --line: rgba(20,24,36,0.12);
+      --accent: #2563eb;
+      --accent2: #16a34a;
+      --bad: #dc2626;
+      --good: #16a34a;
+      --shadow: 0 18px 60px rgba(20,24,36,0.12);
+    }
+
+    [data-theme="neon"] {
+      --bg: radial-gradient(1200px 800px at 20% 10%, rgba(110,231,255,0.14), rgba(0,0,0,0)) ,
+             radial-gradient(1000px 700px at 80% 30%, rgba(167,255,131,0.12), rgba(0,0,0,0)) ,
+             #07080a;
+      --panel: rgba(255,255,255,0.06);
+      --panel2: rgba(255,255,255,0.12);
+      --accent: #6ee7ff;
+      --accent2: #a7ff83;
+      --shadow: 0 18px 70px rgba(0,0,0,0.65);
+    }
+
+    @media (prefers-color-scheme: light) {
+      [data-theme="auto"] {
+        --bg: #f7f8fb;
+        --panel: #ffffff;
+        --panel2: #f0f2f7;
+        --text: #141824;
+        --muted: rgba(20,24,36,0.65);
+        --line: rgba(20,24,36,0.12);
+        --accent: #2563eb;
+        --accent2: #16a34a;
+        --bad: #dc2626;
+        --good: #16a34a;
+        --shadow: 0 18px 60px rgba(20,24,36,0.12);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.25;
+    }
+
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 20px 16px 56px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+      background: color-mix(in srgb, var(--bg) 78%, transparent);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .head {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 14px 16px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .title {
+      display: grid;
+      gap: 6px;
+    }
+
+    .title h1 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: 0.2px;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .btns {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 650;
+      font-size: 13px;
+      box-shadow: var(--shadow);
+      transition: transform 120ms ease, border-color 120ms ease;
+    }
+
+    button:hover { transform: translateY(-1px); border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); }
+    button[data-active="1"] { border-color: color-mix(in srgb, var(--accent) 72%, var(--line)); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .card {
+      grid-column: span 6;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      overflow: hidden;
+    }
+
+    .card.wide { grid-column: span 12; }
+
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--muted);
+    }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .big {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+    }
+
+    .row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 0;
+      border-top: 1px dashed var(--line);
+    }
+
+    .row:first-of-type { border-top: 0; }
+
+    .lab { color: var(--muted); font-size: 12px; }
+    .val { font-weight: 700; font-variant-numeric: tabular-nums; }
+
+    .good { color: var(--good); }
+    .bad { color: var(--bad); }
+
+    .spark {
+      margin-top: 10px;
+      color: color-mix(in srgb, var(--accent) 68%, var(--text));
+      opacity: 0.92;
+    }
+
+    .subgrid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      background: var(--panel2);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .alerts {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .alert {
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .alert .when { color: var(--muted); font-size: 12px; }
+
+    @media (max-width: 860px) {
+      .card { grid-column: span 12; }
+      .kpis { grid-template-columns: 1fr; }
+      .btns { justify-content: flex-start; }
+      .head { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      body { background: #fff !important; color: #000 !important; }
+      header { position: static; background: #fff !important; }
+      .btns { display: none !important; }
+      .card { box-shadow: none !important; }
+      html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      :root, [data-theme] {
+        --bg: #ffffff;
+        --panel: #ffffff;
+        --panel2: #f3f4f6;
+        --text: #111827;
+        --muted: rgba(17,24,39,0.65);
+        --line: rgba(17,24,39,0.14);
+        --accent: #111827;
+        --accent2: #111827;
+      }
+    }
+  </style>
+</head>
+<body data-theme="auto">
+<header>
+  <div class="head">
+    <div class="title">
+      <h1>{{ universe_name }} • {{ player_name }} <span class="pill">{{ server_id }}</span></h1>
+      <div class="meta">Rapport: {{ report_date }} • Snapshot: {{ snapshot_hhmm }} ({{ snapshot_iso }}) • Période recap: {{ recap_period.start }} → {{ recap_period.end }}</div>
+    </div>
+    <div class="btns">
+      <button id="btn-auto" data-theme="auto">Auto</button>
+      <button id="btn-clean" data-theme="clean">Clean</button>
+      <button id="btn-neon" data-theme="neon">Neon</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="grid">
+
+    {% set main = [
+      ("global", "🌍 Global"),
+      ("economy", "💰 Économie"),
+      ("research", "🧠 Recherche"),
+      ("military", "⚔️ Militaire")
+    ] %}
+
+    {% for key, label in main %}
+      {% set c = cards[key] %}
+      <section class="card">
+        <h2>{{ label }}</h2>
+        <div class="kpis">
+          <div>
+            <div class="big">{% if c.last %}{{ fmt_int(c.last.points) }}{% else %}-{% endif %}</div>
+            <div class="meta">Rang: {% if c.last %}#{{ fmt_int(c.last.rank) }}{% else %}-{% endif %}</div>
+          </div>
+          <div>
+            <div class="row">
+              <div class="lab">Dernière maj</div>
+              <div class="val">
+                {% if c.delta_last %}
+                  <span class="{{ 'good' if c.delta_last.points>=0 else 'bad' }}">{{ fmt_signed(c.delta_last.points) }}</span>
+                  <span class="meta">(rang {{ fmt_signed(c.delta_last.rank) }})</span>
+                {% else %}-{% endif %}
+              </div>
+            </div>
+            <div class="row">
+              <div class="lab">24h glissant</div>
+              <div class="val">
+                {% if c.delta_24h %}
+                  <span class="{{ 'good' if c.delta_24h.points>=0 else 'bad' }}">{{ fmt_signed(c.delta_24h.points) }}</span>
+                  <span class="meta">(rang {{ fmt_signed(c.delta_24h.rank) }})</span>
+                {% else %}-{% endif %}
+              </div>
+            </div>
+            <div class="row">
+              <div class="lab">J-1 21h → J 21h</div>
+              <div class="val">
+                {% if c.delta_daily %}
+                  <span class="{{ 'good' if c.delta_daily.points>=0 else 'bad' }}">{{ fmt_signed(c.delta_daily.points) }}</span>
+                  <span class="meta">(rang {{ fmt_signed(c.delta_daily.rank) }})</span>
+                {% else %}-{% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {% if c.spark_svg %}
+          <div class="spark">{{ c.spark_svg | safe }}</div>
+        {% endif %}
+      </section>
+    {% endfor %}
+
+    <section class="card wide">
+      <h2>🚨 TOP / FLOP (dernière maj)</h2>
+      {% if top_flop and top_flop|length > 0 %}
+        <div class="alerts">
+          {% for it in top_flop %}
+            <div class="alert">
+              <div>
+                <strong>{{ it.kind }}</strong> • {{ it.label }}
+                <span class="meta">• rang {{ fmt_signed(it.rank_delta) }} • points {{ fmt_signed(it.points_delta) }}</span>
+              </div>
+              <div class="when">{{ snapshot_iso }}</div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="meta">Pas de mouvement notable (ou pas assez de data).</div>
+      {% endif %}
+    </section>
+
+    <section class="card wide">
+      <h2>⚔️ Militaire Détail</h2>
+      <div class="subgrid">
+        {% set detail = [
+          ("military_built", "Built"),
+          ("military_destroyed", "Destroyed"),
+          ("military_lost", "Lost"),
+          ("honor", "Honor")
+        ] %}
+        {% for key, label in detail %}
+          {% set c = cards[key] %}
+          <div class="card" style="grid-column: span 6;">
+            <h2>{{ label }}</h2>
+            <div class="kpis">
+              <div>
+                <div class="big">{% if c.last %}{{ fmt_int(c.last.points) }}{% else %}-{% endif %}</div>
+                <div class="meta">Rang: {% if c.last %}#{{ fmt_int(c.last.rank) }}{% else %}-{% endif %}</div>
+              </div>
+              <div>
+                <div class="row">
+                  <div class="lab">Dernière maj</div>
+                  <div class="val">
+                    {% if c.delta_last %}
+                      <span class="{{ 'good' if c.delta_last.points>=0 else 'bad' }}">{{ fmt_signed(c.delta_last.points) }}</span>
+                      <span class="meta">(rang {{ fmt_signed(c.delta_last.rank) }})</span>
+                    {% else %}-{% endif %}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="lab">24h glissant</div>
+                  <div class="val">
+                    {% if c.delta_24h %}
+                      <span class="{{ 'good' if c.delta_24h.points>=0 else 'bad' }}">{{ fmt_signed(c.delta_24h.points) }}</span>
+                      <span class="meta">(rang {{ fmt_signed(c.delta_24h.rank) }})</span>
+                    {% else %}-{% endif %}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="lab">J-1 21h → J 21h</div>
+                  <div class="val">
+                    {% if c.delta_daily %}
+                      <span class="{{ 'good' if c.delta_daily.points>=0 else 'bad' }}">{{ fmt_signed(c.delta_daily.points) }}</span>
+                      <span class="meta">(rang {{ fmt_signed(c.delta_daily.rank) }})</span>
+                    {% else %}-{% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% if c.spark_svg %}
+              <div class="spark">{{ c.spark_svg | safe }}</div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="card wide">
+      <h2>🧨 Timeline alertes (7j)</h2>
+      {% if alerts and alerts|length > 0 %}
+        <div class="alerts">
+          {% for a in alerts %}
+            <div class="alert">
+              <div><strong>{{ a.category }}</strong></div>
+              <div class="when">{{ a.created_at }}</div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="meta">Aucune alerte enregistrée.</div>
+      {% endif %}
+    </section>
+
+  </div>
+</div>
+
+<script>
+  (function() {
+    function getParam(name) {
+      const u = new URL(window.location.href);
+      return u.searchParams.get(name);
+    }
+
+    function applyTheme(theme) {
+      document.body.setAttribute('data-theme', theme);
+      localStorage.setItem('hs_theme', theme);
+      for (const b of document.querySelectorAll('button[data-theme]')) {
+        b.dataset.active = (b.dataset.theme === theme) ? '1' : '0';
+      }
+    }
+
+    const qp = (getParam('theme') || '').toLowerCase();
+    const ls = (localStorage.getItem('hs_theme') || '').toLowerCase();
+    const initial = (qp === 'auto' || qp === 'clean' || qp === 'neon') ? qp : ((ls === 'auto' || ls === 'clean' || ls === 'neon') ? ls : 'auto');
+
+    applyTheme(initial);
+
+    for (const b of document.querySelectorAll('button[data-theme]')) {
+      b.addEventListener('click', () => applyTheme(b.dataset.theme));
+    }
+  })();
+</script>
+</body>
+</html>

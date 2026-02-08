@@ -1,0 +1,31 @@
+# HARDSTATS OGame - example config (Alpha v0.1)
+community: "fr"
+universe:
+  server_id: "s274-fr"        # ex: "s123-fr" (recommended)
+  base_url: ""         # optional override; if set, it wins over server_id
+player_name: "KRATOS"
+discord:
+  webhook_url: "https://discord.com/api/webhooks/1469841491500335145/zcT-HARGX1R6xAotbbV7bimW056lZLTGIQvQSiFCZoOpyGVnRStpmW23-R6toCbLqmxE"      # optional
+  username: "OGame Stats"
+  avatar_url: ""       # optional
+  dry_run: false         # if true: print instead of sending
+output:
+  out_dir: "./out"
+  public_base_url: ""  # optional, e.g. "https://<user>.github.io/<repo>/"
+  publish_dir: "./docs"
+  latest_filename: "latest.html"
+  keep_history: true
+storage:
+  data_dir: "./data"
+  sqlite_path: "./data/ogame_stats.sqlite"
+schedule:
+  collect_minutes: 60
+  recap_time: "21:00"  # Europe/Paris
+alerts:
+  enabled: true
+  cooldown_minutes: 180
+  thresholds:
+    rank_jump_1h: 25
+    rank_drop_1h: 25
+    pct_change_24h: 0.006
+    lost_spike_factor: 2.5

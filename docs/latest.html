@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HARDSTATS OGame • Scorpius • KRATOS • 2026-02-08</title>
+  <style>
+    :root {
+      --bg: #0b0d10;
+      --panel: rgba(255,255,255,0.06);
+      --panel2: rgba(255,255,255,0.10);
+      --text: #e8edf2;
+      --muted: rgba(232,237,242,0.72);
+      --line: rgba(255,255,255,0.12);
+      --accent: #6ee7ff;
+      --accent2: #a7ff83;
+      --bad: #ff6b6b;
+      --good: #34d399;
+      --shadow: 0 18px 60px rgba(0,0,0,0.55);
+      --radius: 16px;
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+    }
+
+    [data-theme="clean"] {
+      --bg: #f7f8fb;
+      --panel: #ffffff;
+      --panel2: #f0f2f7;
+      --text: #141824;
+      --muted: rgba(20,24,36,0.65);
+      --line: rgba(20,24,36,0.12);
+      --accent: #2563eb;
+      --accent2: #16a34a;
+      --bad: #dc2626;
+      --good: #16a34a;
+      --shadow: 0 18px 60px rgba(20,24,36,0.12);
+    }
+
+    [data-theme="neon"] {
+      --bg: radial-gradient(1200px 800px at 20% 10%, rgba(110,231,255,0.14), rgba(0,0,0,0)) ,
+             radial-gradient(1000px 700px at 80% 30%, rgba(167,255,131,0.12), rgba(0,0,0,0)) ,
+             #07080a;
+      --panel: rgba(255,255,255,0.06);
+      --panel2: rgba(255,255,255,0.12);
+      --accent: #6ee7ff;
+      --accent2: #a7ff83;
+      --shadow: 0 18px 70px rgba(0,0,0,0.65);
+    }
+
+    @media (prefers-color-scheme: light) {
+      [data-theme="auto"] {
+        --bg: #f7f8fb;
+        --panel: #ffffff;
+        --panel2: #f0f2f7;
+        --text: #141824;
+        --muted: rgba(20,24,36,0.65);
+        --line: rgba(20,24,36,0.12);
+        --accent: #2563eb;
+        --accent2: #16a34a;
+        --bad: #dc2626;
+        --good: #16a34a;
+        --shadow: 0 18px 60px rgba(20,24,36,0.12);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.25;
+    }
+
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 20px 16px 56px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+      background: color-mix(in srgb, var(--bg) 78%, transparent);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .head {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 14px 16px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .title {
+      display: grid;
+      gap: 6px;
+    }
+
+    .title h1 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: 0.2px;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .btns {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 650;
+      font-size: 13px;
+      box-shadow: var(--shadow);
+      transition: transform 120ms ease, border-color 120ms ease;
+    }
+
+    button:hover { transform: translateY(-1px); border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); }
+    button[data-active="1"] { border-color: color-mix(in srgb, var(--accent) 72%, var(--line)); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .card {
+      grid-column: span 6;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      overflow: hidden;
+    }
+
+    .card.wide { grid-column: span 12; }
+
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--muted);
+    }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .big {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+    }
+
+    .row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 0;
+      border-top: 1px dashed var(--line);
+    }
+
+    .row:first-of-type { border-top: 0; }
+
+    .lab { color: var(--muted); font-size: 12px; }
+    .val { font-weight: 700; font-variant-numeric: tabular-nums; }
+
+    .good { color: var(--good); }
+    .bad { color: var(--bad); }
+
+    .spark {
+      margin-top: 10px;
+      color: color-mix(in srgb, var(--accent) 68%, var(--text));
+      opacity: 0.92;
+    }
+
+    .subgrid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      background: var(--panel2);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .alerts {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .alert {
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .alert .when { color: var(--muted); font-size: 12px; }
+
+    @media (max-width: 860px) {
+      .card { grid-column: span 12; }
+      .kpis { grid-template-columns: 1fr; }
+      .btns { justify-content: flex-start; }
+      .head { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      body { background: #fff !important; color: #000 !important; }
+      header { position: static; background: #fff !important; }
+      .btns { display: none !important; }
+      .card { box-shadow: none !important; }
+      html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      :root, [data-theme] {
+        --bg: #ffffff;
+        --panel: #ffffff;
+        --panel2: #f3f4f6;
+        --text: #111827;
+        --muted: rgba(17,24,39,0.65);
+        --line: rgba(17,24,39,0.14);
+        --accent: #111827;
+        --accent2: #111827;
+      }
+    }
+  </style>
+</head>
+<body data-theme="auto">
+<header>
+  <div class="head">
+    <div class="title">
+      <h1>Scorpius • KRATOS <span class="pill">s274-fr</span></h1>
+      <div class="meta">Rapport: 2026-02-08 • Snapshot: 00:15 (2026-02-08T00:15:49+01:00) • Période recap: 07/02/2026 21:00 → 08/02/2026 21:00</div>
+    </div>
+    <div class="btns">
+      <button id="btn-auto" data-theme="auto">Auto</button>
+      <button id="btn-clean" data-theme="clean">Clean</button>
+      <button id="btn-neon" data-theme="neon">Neon</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="grid">
+
+    
+
+    
+      
+      <section class="card">
+        <h2>🌍 Global</h2>
+        <div class="kpis">
+          <div>
+            <div class="big">755 532 903</div>
+            <div class="meta">Rang: #5</div>
+          </div>
+          <div>
+            <div class="row">
+              <div class="lab">Dernière maj</div>
+              <div class="val">
+                -
+              </div>
+            </div>
+            <div class="row">
+              <div class="lab">24h glissant</div>
+              <div class="val">
+                -
+              </div>
+            </div>
+            <div class="row">
+              <div class="lab">J-1 21h → J 21h</div>
+              <div class="val">
+                -
+              </div>
+            </div>
+          </div>
+        </div>
+
+        
+      </section>
+    
+      
+      <section class="card">
+        <h2>💰 Économie</h2>
+        <div class="kpis">
+          <div>
+            <div class="big">475 465 357</div>
+            <div class="meta">Rang: #4</div>
+          </div>
+          <div>
+            <div class="row">
+              <div class="lab">Dernière maj</div>
+              <div class="val">
+                -
+              </div>
+            </div>
+            <div class="row">
+              <div class="lab">24h glissant</div>
+              <div class="val">
+                -
+              </div>
+            </div>
+            <div class="row">
+              <div class="lab">J-1 21h → J 21h</div>
+              <div class="val">
+                -
+              </div>
+            </div>
+          </div>
+        </div>
+
+        
+      </section>
+    
+      
+      <section class="card">
+        <h2>🧠 Recherche</h2>
+        <div class="kpis">
+          <div>
+            <div class="big">124 838 260</div>
+            <div class="meta">Rang: #15</div>
+          </div>
+          <div>
+            <div class="row">
+              <div class="lab">Dernière maj</div>
+              <div class="val">
+                -
+              </div>
+            </div>
+            <div class="row">
+              <div class="lab">24h glissant</div>
+              <div class="val">
+                -
+              </div>
+            </div>
+            <div class="row">
+              <div class="lab">J-1 21h → J 21h</div>
+              <div class="val">
+                -
+              </div>
+            </div>
+          </div>
+        </div>
+
+        
+      </section>
+    
+      
+      <section class="card">
+        <h2>⚔️ Militaire</h2>
+        <div class="kpis">
+          <div>
+            <div class="big">33 401 415</div>
+            <div class="meta">Rang: #57</div>
+          </div>
+          <div>
+            <div class="row">
+              <div class="lab">Dernière maj</div>
+              <div class="val">
+                -
+              </div>
+            </div>
+            <div class="row">
+              <div class="lab">24h glissant</div>
+              <div class="val">
+                -
+              </div>
+            </div>
+            <div class="row">
+              <div class="lab">J-1 21h → J 21h</div>
+              <div class="val">
+                -
+              </div>
+            </div>
+          </div>
+        </div>
+
+        
+      </section>
+    
+
+    <section class="card wide">
+      <h2>🚨 TOP / FLOP (dernière maj)</h2>
+      
+        <div class="meta">Pas de mouvement notable (ou pas assez de data).</div>
+      
+    </section>
+
+    <section class="card wide">
+      <h2>⚔️ Militaire Détail</h2>
+      <div class="subgrid">
+        
+        
+          
+          <div class="card" style="grid-column: span 6;">
+            <h2>Built</h2>
+            <div class="kpis">
+              <div>
+                <div class="big">150 928 380</div>
+                <div class="meta">Rang: #9</div>
+              </div>
+              <div>
+                <div class="row">
+                  <div class="lab">Dernière maj</div>
+                  <div class="val">
+                    -
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="lab">24h glissant</div>
+                  <div class="val">
+                    -
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="lab">J-1 21h → J 21h</div>
+                  <div class="val">
+                    -
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        
+          
+          <div class="card" style="grid-column: span 6;">
+            <h2>Destroyed</h2>
+            <div class="kpis">
+              <div>
+                <div class="big">60 267 670</div>
+                <div class="meta">Rang: #20</div>
+              </div>
+              <div>
+                <div class="row">
+                  <div class="lab">Dernière maj</div>
+                  <div class="val">
+                    -
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="lab">24h glissant</div>
+                  <div class="val">
+                    -
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="lab">J-1 21h → J 21h</div>
+                  <div class="val">
+                    -
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        
+          
+          <div class="card" style="grid-column: span 6;">
+            <h2>Lost</h2>
+            <div class="kpis">
+              <div>
+                <div class="big">117 526 915</div>
+                <div class="meta">Rang: #3</div>
+              </div>
+              <div>
+                <div class="row">
+                  <div class="lab">Dernière maj</div>
+                  <div class="val">
+                    -
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="lab">24h glissant</div>
+                  <div class="val">
+                    -
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="lab">J-1 21h → J 21h</div>
+                  <div class="val">
+                    -
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        
+          
+          <div class="card" style="grid-column: span 6;">
+            <h2>Honor</h2>
+            <div class="kpis">
+              <div>
+                <div class="big">3 349 063</div>
+                <div class="meta">Rang: #4</div>
+              </div>
+              <div>
+                <div class="row">
+                  <div class="lab">Dernière maj</div>
+                  <div class="val">
+                    -
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="lab">24h glissant</div>
+                  <div class="val">
+                    -
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="lab">J-1 21h → J 21h</div>
+                  <div class="val">
+                    -
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        
+      </div>
+    </section>
+
+    <section class="card wide">
+      <h2>🧨 Timeline alertes (7j)</h2>
+      
+        <div class="meta">Aucune alerte enregistrée.</div>
+      
+    </section>
+
+  </div>
+</div>
+
+<script>
+  (function() {
+    function getParam(name) {
+      const u = new URL(window.location.href);
+      return u.searchParams.get(name);
+    }
+
+    function applyTheme(theme) {
+      document.body.setAttribute('data-theme', theme);
+      localStorage.setItem('hs_theme', theme);
+      for (const b of document.querySelectorAll('button[data-theme]')) {
+        b.dataset.active = (b.dataset.theme === theme) ? '1' : '0';
+      }
+    }
+
+    const qp = (getParam('theme') || '').toLowerCase();
+    const ls = (localStorage.getItem('hs_theme') || '').toLowerCase();
+    const initial = (qp === 'auto' || qp === 'clean' || qp === 'neon') ? qp : ((ls === 'auto' || ls === 'clean' || ls === 'neon') ? ls : 'auto');
+
+    applyTheme(initial);
+
+    for (const b of document.querySelectorAll('button[data-theme]')) {
+      b.addEventListener('click', () => applyTheme(b.dataset.theme));
+    }
+  })();
+</script>
+</body>
+</html>
