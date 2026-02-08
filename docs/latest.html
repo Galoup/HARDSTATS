@@ -7,31 +7,35 @@
   <style>
     :root {
       --bg: #0b0d10;
-      --panel: rgba(255,255,255,0.06);
-      --panel2: rgba(255,255,255,0.10);
+      --surface: rgba(255,255,255,0.06);
+      --surface2: rgba(255,255,255,0.10);
       --text: #e8edf2;
       --muted: rgba(232,237,242,0.72);
-      --line: rgba(255,255,255,0.12);
       --accent: #6ee7ff;
-      --accent2: #a7ff83;
-      --bad: #ff6b6b;
       --good: #34d399;
+      --bad: #ff6b6b;
+      --warn: #ffd166;
+      --border: rgba(255,255,255,0.12);
       --shadow: 0 18px 60px rgba(0,0,0,0.55);
       --radius: 16px;
       --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+
+      --overlay-opacity: 0;
+      --overlay: none;
+      --glow: 0;
     }
 
     [data-theme="clean"] {
       --bg: #f7f8fb;
-      --panel: #ffffff;
-      --panel2: #f0f2f7;
+      --surface: #ffffff;
+      --surface2: #f0f2f7;
       --text: #141824;
       --muted: rgba(20,24,36,0.65);
-      --line: rgba(20,24,36,0.12);
+      --border: rgba(20,24,36,0.12);
       --accent: #2563eb;
-      --accent2: #16a34a;
       --bad: #dc2626;
       --good: #16a34a;
+      --warn: #b45309;
       --shadow: 0 18px 60px rgba(20,24,36,0.12);
     }
 
@@ -39,25 +43,90 @@
       --bg: radial-gradient(1200px 800px at 20% 10%, rgba(110,231,255,0.14), rgba(0,0,0,0)) ,
              radial-gradient(1000px 700px at 80% 30%, rgba(167,255,131,0.12), rgba(0,0,0,0)) ,
              #07080a;
-      --panel: rgba(255,255,255,0.06);
-      --panel2: rgba(255,255,255,0.12);
+      --surface: rgba(255,255,255,0.06);
+      --surface2: rgba(255,255,255,0.12);
       --accent: #6ee7ff;
-      --accent2: #a7ff83;
       --shadow: 0 18px 70px rgba(0,0,0,0.65);
+      --glow: 1;
+    }
+
+    [data-theme="space"] {
+      --bg: radial-gradient(1200px 800px at 18% 18%, rgba(34,211,238,0.12), rgba(0,0,0,0)) ,
+             radial-gradient(900px 700px at 78% 26%, rgba(59,130,246,0.10), rgba(0,0,0,0)) ,
+             radial-gradient(800px 600px at 40% 92%, rgba(167,255,131,0.06), rgba(0,0,0,0)) ,
+             #05070c;
+      --surface: rgba(255,255,255,0.06);
+      --surface2: rgba(255,255,255,0.10);
+      --text: #eaf1ff;
+      --muted: rgba(234,241,255,0.72);
+      --border: rgba(255,255,255,0.12);
+      --accent: #22d3ee;
+      --good: #a7ff83;
+      --bad: #ff6b6b;
+      --warn: #ffd166;
+      --shadow: 0 20px 80px rgba(0,0,0,0.70);
+      --overlay-opacity: 0.55;
+      --overlay:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.14) 0 1px, transparent 2px),
+        radial-gradient(circle at 80% 40%, rgba(255,255,255,0.10) 0 1px, transparent 2px),
+        radial-gradient(circle at 30% 80%, rgba(255,255,255,0.12) 0 1px, transparent 2px),
+        radial-gradient(circle at 60% 10%, rgba(34,211,238,0.10) 0 1px, transparent 2px);
+      --glow: 1;
+    }
+
+    [data-theme="animated"] {
+      --bg: radial-gradient(900px 650px at 18% 25%, rgba(110,231,255,0.10), rgba(0,0,0,0)) ,
+             radial-gradient(800px 600px at 75% 28%, rgba(167,255,131,0.08), rgba(0,0,0,0)) ,
+             linear-gradient(120deg, #06070b, #0a1020, #0b0d10);
+      --surface: rgba(255,255,255,0.06);
+      --surface2: rgba(255,255,255,0.11);
+      --text: #eef3ff;
+      --muted: rgba(238,243,255,0.70);
+      --border: rgba(255,255,255,0.12);
+      --accent: #6ee7ff;
+      --good: #a7ff83;
+      --bad: #ff6b6b;
+      --warn: #ffd166;
+      --shadow: 0 22px 90px rgba(0,0,0,0.72);
+      --overlay-opacity: 0.22;
+      --overlay:
+        radial-gradient(circle at 15% 20%, rgba(255,255,255,0.10) 0 1px, transparent 2px),
+        radial-gradient(circle at 85% 55%, rgba(255,255,255,0.08) 0 1px, transparent 2px);
+      --glow: 1;
+    }
+
+    [data-theme="retro"] {
+      --bg: #070a07;
+      --surface: rgba(0,255,120,0.06);
+      --surface2: rgba(0,255,120,0.10);
+      --text: rgba(210,255,230,0.92);
+      --muted: rgba(210,255,230,0.68);
+      --border: rgba(0,255,120,0.20);
+      --accent: #22c55e;
+      --good: #22c55e;
+      --bad: #ff6b6b;
+      --warn: #fbbf24;
+      --shadow: 0 18px 60px rgba(0,0,0,0.75);
+      --font: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --overlay-opacity: 0.10;
+      --overlay:
+        linear-gradient(to right, rgba(34,197,94,0.20) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(34,197,94,0.20) 1px, transparent 1px);
+      --glow: 0;
     }
 
     @media (prefers-color-scheme: light) {
       [data-theme="auto"] {
         --bg: #f7f8fb;
-        --panel: #ffffff;
-        --panel2: #f0f2f7;
+        --surface: #ffffff;
+        --surface2: #f0f2f7;
         --text: #141824;
         --muted: rgba(20,24,36,0.65);
-        --line: rgba(20,24,36,0.12);
+        --border: rgba(20,24,36,0.12);
         --accent: #2563eb;
-        --accent2: #16a34a;
         --bad: #dc2626;
         --good: #16a34a;
+        --warn: #b45309;
         --shadow: 0 18px 60px rgba(20,24,36,0.12);
       }
     }
@@ -69,6 +138,25 @@
       background: var(--bg);
       color: var(--text);
       line-height: 1.25;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: var(--overlay-opacity);
+      background-image: var(--overlay);
+      background-repeat: repeat;
+      background-size: 280px 280px, 360px 360px, 320px 320px, 400px 400px;
+      mix-blend-mode: screen;
+    }
+
+    body > header,
+    body > .wrap {
+      position: relative;
+      z-index: 1;
     }
 
     .wrap {
@@ -83,7 +171,7 @@
       z-index: 10;
       backdrop-filter: blur(10px);
       background: color-mix(in srgb, var(--bg) 78%, transparent);
-      border-bottom: 1px solid var(--line);
+      border-bottom: 1px solid var(--border);
     }
 
     .head {
@@ -119,22 +207,37 @@
       justify-content: flex-end;
     }
 
-    button {
-      appearance: none;
-      border: 1px solid var(--line);
-      background: var(--panel);
-      color: var(--text);
+    .theme-ctl {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
       padding: 10px 12px;
       border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      font-weight: 650;
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .theme-ctl label { color: var(--muted); font-size: 12px; font-weight: 650; }
+
+    select {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text);
+      padding: 9px 32px 9px 10px;
+      border-radius: 12px;
       cursor: pointer;
       font-weight: 650;
       font-size: 13px;
-      box-shadow: var(--shadow);
-      transition: transform 120ms ease, border-color 120ms ease;
+      transition: border-color 120ms ease;
     }
 
-    button:hover { transform: translateY(-1px); border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); }
-    button[data-active="1"] { border-color: color-mix(in srgb, var(--accent) 72%, var(--line)); }
+    select:focus { outline: 2px solid color-mix(in srgb, var(--accent) 45%, transparent); outline-offset: 2px; }
+    .chev { color: var(--muted); margin-left: -28px; pointer-events: none; }
 
     .grid {
       display: grid;
@@ -145,8 +248,8 @@
 
     .card {
       grid-column: span 6;
-      background: var(--panel);
-      border: 1px solid var(--line);
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 14px;
@@ -182,7 +285,7 @@
       justify-content: space-between;
       gap: 10px;
       padding: 8px 0;
-      border-top: 1px dashed var(--line);
+      border-top: 1px dashed var(--border);
     }
 
     .row:first-of-type { border-top: 0; }
@@ -210,8 +313,8 @@
       align-items: center;
       gap: 8px;
       padding: 8px 10px;
-      background: var(--panel2);
-      border: 1px solid var(--line);
+      background: var(--surface2);
+      border: 1px solid var(--border);
       border-radius: 999px;
       font-size: 12px;
       color: var(--muted);
@@ -226,8 +329,8 @@
     .alert {
       padding: 10px 12px;
       border-radius: 12px;
-      border: 1px solid var(--line);
-      background: var(--panel2);
+      border: 1px solid var(--border);
+      background: var(--surface2);
       display: flex;
       justify-content: space-between;
       gap: 10px;
@@ -243,6 +346,38 @@
       .head { grid-template-columns: 1fr; }
     }
 
+    @media (prefers-reduced-motion: no-preference) {
+      body[data-theme="animated"] {
+        background-size: 200% 200%;
+        animation: bg-pan 55s ease-in-out infinite;
+      }
+
+      header {
+        transition: background 240ms ease;
+      }
+
+      body[data-theme="animated"] header {
+        background: linear-gradient(90deg,
+          color-mix(in srgb, var(--surface) 92%, transparent),
+          color-mix(in srgb, var(--accent) 10%, var(--surface)),
+          color-mix(in srgb, var(--surface) 92%, transparent));
+        background-size: 220% 100%;
+        animation: header-shine 22s ease-in-out infinite;
+      }
+    }
+
+    @keyframes bg-pan {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes header-shine {
+      0% { background-position: 0% 0%; }
+      50% { background-position: 100% 0%; }
+      100% { background-position: 0% 0%; }
+    }
+
     @media print {
       body { background: #fff !important; color: #000 !important; }
       header { position: static; background: #fff !important; }
@@ -251,13 +386,16 @@
       html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       :root, [data-theme] {
         --bg: #ffffff;
-        --panel: #ffffff;
-        --panel2: #f3f4f6;
+        --surface: #ffffff;
+        --surface2: #f3f4f6;
         --text: #111827;
         --muted: rgba(17,24,39,0.65);
-        --line: rgba(17,24,39,0.14);
+        --border: rgba(17,24,39,0.14);
         --accent: #111827;
-        --accent2: #111827;
+        --good: #111827;
+        --bad: #111827;
+        --warn: #111827;
+        --overlay-opacity: 0;
       }
     }
   </style>
@@ -270,9 +408,18 @@
       <div class="meta">Rapport: 2026-02-08 • Snapshot: 00:15 (2026-02-08T00:15:49+01:00) • Période recap: 07/02/2026 21:00 → 08/02/2026 21:00</div>
     </div>
     <div class="btns">
-      <button id="btn-auto" data-theme="auto">Auto</button>
-      <button id="btn-clean" data-theme="clean">Clean</button>
-      <button id="btn-neon" data-theme="neon">Neon</button>
+      <div class="theme-ctl">
+        <label for="theme-select">Thème</label>
+        <select id="theme-select">
+          <option value="auto">Auto</option>
+          <option value="clean">Clean</option>
+          <option value="neon">Neon</option>
+          <option value="space">Space</option>
+          <option value="animated">Animated</option>
+          <option value="retro">Retro</option>
+        </select>
+        <span class="chev">▾</span>
+      </div>
     </div>
   </div>
 </header>
@@ -571,27 +718,35 @@
 
 <script>
   (function() {
+    const allowed = new Set(['auto','clean','neon','space','animated','retro']);
+
     function getParam(name) {
       const u = new URL(window.location.href);
       return u.searchParams.get(name);
     }
 
+    function normalizeTheme(t) {
+      if (!t) return null;
+      const v = String(t).trim().toLowerCase();
+      return allowed.has(v) ? v : null;
+    }
+
     function applyTheme(theme) {
       document.body.setAttribute('data-theme', theme);
       localStorage.setItem('hs_theme', theme);
-      for (const b of document.querySelectorAll('button[data-theme]')) {
-        b.dataset.active = (b.dataset.theme === theme) ? '1' : '0';
-      }
+      const sel = document.getElementById('theme-select');
+      if (sel) sel.value = theme;
     }
 
-    const qp = (getParam('theme') || '').toLowerCase();
-    const ls = (localStorage.getItem('hs_theme') || '').toLowerCase();
-    const initial = (qp === 'auto' || qp === 'clean' || qp === 'neon') ? qp : ((ls === 'auto' || ls === 'clean' || ls === 'neon') ? ls : 'auto');
+    const qp = normalizeTheme(getParam('theme'));
+    const ls = normalizeTheme(localStorage.getItem('hs_theme'));
+    const initial = qp || ls || 'auto';
 
     applyTheme(initial);
 
-    for (const b of document.querySelectorAll('button[data-theme]')) {
-      b.addEventListener('click', () => applyTheme(b.dataset.theme));
+    const sel = document.getElementById('theme-select');
+    if (sel) {
+      sel.addEventListener('change', () => applyTheme(normalizeTheme(sel.value) || 'auto'));
     }
   })();
 </script>
